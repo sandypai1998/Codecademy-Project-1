@@ -1,0 +1,100 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from matplotlib import pyplot as plt
+
+df = pd.read_csv('insurance.csv')
+
+print(df)
+
+# Count of males and females
+gender_count = df.groupby(['sex'])['sex'].count()
+print(gender_count)
+
+#Average insurance cost by gender
+male_insurance_cost = df.charges[df.sex == 'male']
+female_insurance_cost = df.charges[df.sex == 'female']
+male_average = np.mean(male_insurance_cost)
+female_average = np.mean(female_insurance_cost)
+print('Male average insurance cost: ', male_average)
+print('Female average insurance cost: ', female_average)
+
+# Visualize insurance charges by gender
+
+sns.barplot(x = 'sex', y = 'charges', data = df)
+plt.title('Insurance charges by gender')
+plt.xlabel('Gender')
+plt.ylabel('Insurance Charges')
+plt.show()
+
+# Count of smokers by gender
+smoker_count = df.groupby(['smoker', 'sex'])['smoker'].count()
+print(smoker_count)
+
+#Average insurance cost by smoker
+yes_smoking = df.charges[df.smoker == 'yes']
+no_smoking = df.charges[df.smoker == 'no']
+yes_average = np.mean(yes_smoking)
+no_average = np.mean(no_smoking)
+print('Average insurance cost for a smoker: ', yes_average)
+print('Average insurance cost if not smoking: ', no_average)
+
+# Visualize insurance charges by smoker
+
+sns.barplot(x = 'smoker', y = 'charges', data = df)
+plt.title('Insurance charges by smoker')
+plt.xlabel('Smoking/No-Smoking')
+plt.ylabel('Insurance Charges')
+plt.show()
+
+# Count of patients by region
+region_count = df.groupby(['region'])['region'].count()
+print(region_count)
+
+#Average insurance cost by region
+southwest_cost_average = np.mean(df.charges[df.region == 'southwest'])
+southeast_cost_average = np.mean(df.charges[df.region == 'southeast'])
+northwest_cost_average = np.mean(df.charges[df.region == 'northwest'])
+northeast_cost_average = np.mean(df.charges[df.region == 'northeast'])
+print('Average insurance cost in southwest: ', southwest_cost_average)
+print('Average insurance cost in southeast: ', southeast_cost_average)
+print('Average insurance cost in northwest: ', northwest_cost_average)
+print('Average insurance cost in northeast: ', northeast_cost_average)
+
+# Visualize insurance charges by region
+
+sns.barplot(x = 'region', y = 'charges', data = df)
+plt.title('Insurance charges by region')
+plt.xlabel('Region')
+plt.ylabel('Insurance Charges')
+plt.show()
+
+# Visualize insurance cost by BMI
+plt.scatter(x = df.bmi, y = df.charges)
+plt.title('Insurance cost by BMI')
+plt.xlabel('BMI')
+plt.ylabel('Insurance Cost')
+plt.show()
+
+#Visualize BMI by region
+bmi_region = df[['bmi', 'region']].copy()
+bmi_region['bmi_status'] = bmi_region['bmi'].apply(lambda x: 'Healthy' if x <= 25 else 'Not-Healthy')
+print(bmi_region)
+
+sns.countplot(x = 'region', hue = 'bmi_status', data = bmi_region)
+plt.show()
+
+#Visualize insurance cost by age
+plt.scatter(x = df.age, y = df.charges)
+plt.title('Insurance cost by age')
+plt.xlabel('Age')
+plt.ylabel('Insurance Cost')
+plt.show()
+
+#Visualize age by region
+sns.boxplot(x = 'region', y = 'age', data = df)
+plt.show()
+
+# Count of patients with children
+children_count = df.groupby(['children'])['children'].count()
+print(children_count)
